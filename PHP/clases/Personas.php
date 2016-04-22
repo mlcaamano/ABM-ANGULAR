@@ -124,11 +124,11 @@ class Persona
 				foto=:foto
 				WHERE id=:id");
 			$objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso();*/ 
-			$consulta =$objetoAccesoDato->RetornarConsulta("CALL ModificarPersona(:id,:nombre,:apellido,:foto)");
-			$consulta->bindValue(':id',$persona->id, PDO::PARAM_INT);
-			$consulta->bindValue(':nombre',$persona->nombre, PDO::PARAM_STR);
-			$consulta->bindValue(':apellido', $persona->apellido, PDO::PARAM_STR);
-			$consulta->bindValue(':foto', $persona->foto, PDO::PARAM_STR);
+			$consulta =$objetoAccesoDato->RetornarConsulta("UPDATE persona SET nombre='$persona->nombre', apellido='$persona->apellido', foto='$persona->foto' WHERE id='$persona->id'");
+			// $consulta->bindValue(':id',$persona->id, PDO::PARAM_INT);
+			// $consulta->bindValue(':nombre',$persona->nombre, PDO::PARAM_STR);
+			// $consulta->bindValue(':apellido', $persona->apellido, PDO::PARAM_STR);
+			// $consulta->bindValue(':foto', $persona->foto, PDO::PARAM_STR);
 			return $consulta->execute();
 	}
 

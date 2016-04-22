@@ -24,7 +24,7 @@ app.config(function($stateProvider, $urlRouterProvider){
   .state('modificar', 
   {
     templateUrl:"templateusuario.html",
-    url:'/modificar/:id',
+    url:'/modificar/{:id}?:nombre:apellido:dni:foto',
     controller:'controlModificar'
   })
 
@@ -148,24 +148,26 @@ $http.post("PHP/nexo.php",{datos:{accion :"borrar",persona:persona}},{headers: {
 app.controller('controlModificar', function($scope, $http, $stateParams) {
   $scope.DatoTest="**Modificar**";
 
-    // $http.post('PHP/nexo.php', { datos: {accion :"tomar",persona:$scope.persona}})
-    // .then(function(respuesta) {       
-    //      //aca se ejetuca si retorno sin errores        
-    //     console.log(respuesta.data);
-
-
-    // },function errorCallback(response) {        
-    //     //aca se ejecuta cuando hay errores
-    //     console.log( response);           
-    // });
-
-
         $scope.persona={};
-        $scope.persona.nombre= "natalio" ;
-        $scope.persona.dni=$stateParams.id ;
-        $scope.persona.apellido= "natalia" ;
-        $scope.persona.foto="sinfoto";
+        $scope.persona.id=$stateParams.id ;
+        $scope.persona.nombre= $stateParams.nombre ;
+        $scope.persona.dni=$stateParams.dni ;
+        $scope.persona.apellido= $stateParams.apellido ;
+        $scope.persona.foto=$stateParams.foto;
 
 
+  $scope.Guardar=function(){
+    console.log("persona a guardar:");
+    console.log($scope.persona);
+    $http.post('PHP/nexo.php', { datos: {accion :"modificar",persona:$scope.persona}})
+    .then(function(respuesta) {       
+         //aca se ejetuca si retorno sin errores        
+         console.log(respuesta.data);
 
+    },function errorCallback(response) {        
+        //aca se ejecuta cuando hay errores
+        console.log( response);           
+    });
+  }
+  
 });
