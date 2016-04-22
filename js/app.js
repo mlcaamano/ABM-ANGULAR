@@ -1,6 +1,36 @@
 
-var app = angular.module('ABMangularPHP', []);
+var app = angular.module('ABMangularPHP', ['ui.router']);
 
+app.config(function($stateProvider, $urlRouterProvider){
+  $stateProvider
+  .state('menu', 
+  {
+    templateUrl:"templatemenu.html",
+    url:'/menu',
+    controller:'controlMenu'
+  })
+  .state('grilla', 
+  {
+    templateUrl:"templategrilla.html",
+    url:'/grilla',
+    controller:'controlGrilla'
+  })
+  .state('alta', 
+  {
+    templateUrl:"templateusuario.html",
+    url:'/alta',
+    controller:'controlAlta'
+  })
+  .state('modificar', 
+  {
+    templateUrl:"templateusuario.html",
+    url:'/modificar/:id',
+    controller:'controlModificar'
+  })
+
+  $urlRouterProvider.otherwise('/menu');
+
+});
 
 app.controller('controlMenu', function($scope, $http) {
   $scope.DatoTest="**Menu**";
@@ -111,6 +141,18 @@ $http.post("PHP/nexo.php",{datos:{accion :"borrar",persona:persona}},{headers: {
 
 
 
+
+
+});
+
+app.controller('controlModificar', function($scope, $http) {
+  $scope.DatoTest="**Modificar**";
+
+  $scope.persona={};
+  $scope.persona.nombre= "natalio" ;
+  $scope.persona.dni= "12312312" ;
+  $scope.persona.apellido= "natalia" ;
+  $scope.persona.foto="sinfoto";
 
 
 });
