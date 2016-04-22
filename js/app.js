@@ -145,14 +145,27 @@ $http.post("PHP/nexo.php",{datos:{accion :"borrar",persona:persona}},{headers: {
 
 });
 
-app.controller('controlModificar', function($scope, $http) {
+app.controller('controlModificar', function($scope, $http, $stateParams) {
   $scope.DatoTest="**Modificar**";
 
-  $scope.persona={};
-  $scope.persona.nombre= "natalio" ;
-  $scope.persona.dni= "12312312" ;
-  $scope.persona.apellido= "natalia" ;
-  $scope.persona.foto="sinfoto";
+    // $http.post('PHP/nexo.php', { datos: {accion :"tomar",persona:$scope.persona}})
+    // .then(function(respuesta) {       
+    //      //aca se ejetuca si retorno sin errores        
+    //     console.log(respuesta.data);
+
+
+    // },function errorCallback(response) {        
+    //     //aca se ejecuta cuando hay errores
+    //     console.log( response);           
+    // });
+
+
+        $scope.persona={};
+        $scope.persona.nombre= "natalio" ;
+        $scope.persona.dni=$stateParams.id ;
+        $scope.persona.apellido= "natalia" ;
+        $scope.persona.foto="sinfoto";
+
 
 
 });

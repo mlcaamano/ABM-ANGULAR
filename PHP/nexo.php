@@ -72,6 +72,11 @@ else{
 			Persona::InsertarPersona($respuesta->datos->persona);
 			break;
 
+		case 'insertar':
+			echo"Voy a tomar una persona";
+			$respuesta= Persona::TraerUnaPersona($respuesta->datos->persona);
+			break;
+
 		default:
 			# code...
 			break;
