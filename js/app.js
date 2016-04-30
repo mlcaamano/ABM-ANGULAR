@@ -1,5 +1,5 @@
 
-var app = angular.module('ABMangularPHP', ['ui.router']);
+var app = angular.module('ABMangularPHP', ['ui.router', 'angularFileUpload']);
 
 app.config(function($stateProvider, $urlRouterProvider){
   $stateProvider
@@ -37,34 +37,68 @@ app.controller('controlMenu', function($scope, $http) {
 });
 
 
-app.controller('controlAlta', function($scope, $http) {
+app.controller('controlAlta', function($scope, $http, FileUploader) {
   $scope.DatoTest="**alta**";
+
+  $scope.uploader = new FileUploader({url: 'PHP/nexo.php'});
+      $scope.uploader.queueLimit = 1; // indico cuantos archivos permito cargar
+            
 
 //inicio las variables
   $scope.persona={};
   $scope.persona.nombre= "natalia" ;
   $scope.persona.dni= "12312312" ;
   $scope.persona.apellido= "natalia" ;
-  $scope.persona.foto="sinfoto";
+  $scope.persona.foto="pordefecto.png";
 
+  $scope.cargarFoto=function(nombreDeFoto){
+
+    var direccion="fotos/"+nombreDeFoto;
+
+    $http.get(direccion, {responseType: "blob"})
+    .then(
+
+      function(respuesta){
+        var mimetype=respuesta.data.type;
+        var archivo=new File([respuesta.data], direccion, {type: mimetype});
+        var fotoObtenida= new FileUploader.FileItem($scope.uploader, {});
+        fotoObtenida._file= archivo;
+        fotoObtenida.file={};
+        fotoObtenida.file=new File([respuesta.data], nombreDeFoto, {type:mimetype});
+        $scope.uploader.queue.push(fotoObtenida);
+      }
+
+
+      );
+
+  }
+
+  $scope.cargarFoto($scope.persona.foto);
+
+  $scope.uploader.onSuccessItem= function(item, response, status, headers) {
+
+  console.info("Voy a guardar", item, response,status, headers);
+
+  $http.post('PHP/nexo.php', { datos: {accion :"insertar",persona:$scope.persona}})
+  .then(function(respuesta) {       
+    //aca se ejetuca si retorno sin errores        
+    console.log(respuesta.data);
+
+  },function errorCallback(response) {        
+        //aca se ejecuta cuando hay errores
+        console.log( response);           
+    });
+  }
 
   $scope.Guardar=function(){
 
+    if($scope.uploader.queue[0].file.name!='pordefecto.png')
+    {
+      var nombrefoto=$scope.uploader.queue[0].file.name;
+      $scope.persona.foto=nombrefoto;
+    }
 
-  	console.log("persona a guardar:");
-    console.log($scope.persona);
-    $http.post('PHP/nexo.php', { datos: {accion :"insertar",persona:$scope.persona}})
- 	  .then(function(respuesta) {     	
- 		     //aca se ejetuca si retorno sin errores      	
-      	 console.log(respuesta.data);
-
-    },function errorCallback(response) {     		
-     		//aca se ejecuta cuando hay errores
-     		console.log( response);     			
- 	  });
-
-  
-
+    $scope.uploader.uploadAll();
   }
 });
 
@@ -145,8 +179,11 @@ $http.post("PHP/nexo.php",{datos:{accion :"borrar",persona:persona}},{headers: {
 
 });
 
-app.controller('controlModificar', function($scope, $http, $stateParams) {
+app.controller('controlModificar', function($scope, $http, $stateParams, FileUploader) {
   $scope.DatoTest="**Modificar**";
+
+  $scope.uploader = new FileUploader({url: 'PHP/nexo.php'});
+  $scope.uploader.queueLimit = 1;
 
         $scope.persona={};
         $scope.persona.id=$stateParams.id ;
@@ -155,9 +192,34 @@ app.controller('controlModificar', function($scope, $http, $stateParams) {
         $scope.persona.apellido= $stateParams.apellido ;
         $scope.persona.foto=$stateParams.foto;
 
+  $scope.cargarFoto=function(nombreDeFoto){
 
-  $scope.Guardar=function(){
-    console.log("persona a guardar:");
+    var direccion="fotos/"+nombreDeFoto;
+
+    $http.get(direccion, {responseType: "blob"})
+    .then(
+
+      function(respuesta){
+        var mimetype=respuesta.data.type;
+        var archivo=new File([respuesta.data], direccion, {type: mimetype});
+        var fotoObtenida= new FileUploader.FileItem($scope.uploader, {});
+        fotoObtenida._file= archivo;
+        fotoObtenida.file={};
+        fotoObtenida.file=new File([respuesta.data], nombreDeFoto, {type:mimetype});
+        $scope.uploader.queue.push(fotoObtenida);
+      }
+
+
+      );
+
+  }
+
+  $scope.cargarFoto($scope.persona.foto);
+
+  $scope.uploader.onSuccessItem= function(item, response, status, headers) {
+
+  console.info("Voy a modificar", item, response,status, headers);
+
     console.log($scope.persona);
     $http.post('PHP/nexo.php', { datos: {accion :"modificar",persona:$scope.persona}})
     .then(function(respuesta) {       
@@ -168,6 +230,19 @@ app.controller('controlModificar', function($scope, $http, $stateParams) {
         //aca se ejecuta cuando hay errores
         console.log( response);           
     });
+
+
+  }
+
+  $scope.Guardar=function(){
+
+    if($scope.uploader.queue[0].file.name!='pordefecto.png')
+    {
+      var nombrefoto=$scope.uploader.queue[0].file.name;
+      $scope.persona.foto=nombrefoto;
+    }
+
+    $scope.uploader.uploadAll();
   }
   
 });
