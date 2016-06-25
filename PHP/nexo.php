@@ -2,7 +2,6 @@
 
 include "clases/Personas.php";
 // $_GET['accion'];
-
 if ( !empty( $_FILES ) ) {
     $tempPath = $_FILES[ 'file' ][ 'tmp_name' ];
     // $uploadPath = dirname( __FILE__ ) . DIRECTORY_SEPARATOR . 'img' . DIRECTORY_SEPARATOR . $_FILES[ 'file' ][ 'name' ];
@@ -11,9 +10,7 @@ if ( !empty( $_FILES ) ) {
     $answer = array( 'answer' => 'Archivo Cargado!' );
     $json = json_encode( $answer );
     echo $json;
-}
-
-elseif(isset($_GET['accion']))
+}elseif(isset($_GET['accion']))
 {
 	$accion=$_GET['accion'];
 	if($accion=="traer")
@@ -46,9 +43,9 @@ else{
         console.log( response);           
     });
 	*/
-
-	// echo "<br> datos pasados por post";
-	// var_dump($_POST);
+//datos pasados por POST
+/*	echo "<br>";                -- COMENTO
+	var_dump($_POST);*/
 
 
 
@@ -68,35 +65,29 @@ else{
      		console.log( response);     			
  	  });*/
 
-	$DatosPorPost = file_get_contents("php://input");
+	$DatosPorPost = file_get_contents("php://input"); //ME DEVUELVE LO QE SE PASA A TRAVES DE POST EN FORMATO JSON
 	$respuesta = json_decode($DatosPorPost);
 	var_dump($respuesta);
 
 	switch ($respuesta->datos->accion) {
 		case 'borrar':
-			echo"Voy a borrar";
 			Persona::BorrarPersona($respuesta->datos->persona);
 			break;
-		
 		case 'insertar':
-			echo"Voy a guardar";
+			//echo "voy a insertar";
 			Persona::InsertarPersona($respuesta->datos->persona);
-			break;
-
+			break;		
 		case 'modificar':
-			echo"Voy a modificar una persona";
-			$respuesta= Persona::ModificarPersona($respuesta->datos->persona);
-			break;
-
+			//echo "voy a insertar";
+			Persona::ModificarPersona($respuesta->datos->persona);
+			break;	
 		default:
 			# code...
 			break;
 	}
-
-
 	//echo $respuesta->datos->persona->nombre;
 
-
+	//
 
 
 }

@@ -1,0 +1,53 @@
+	  <div class="container">
+		<div class="page-header">
+			<center><h1>ABM - PHP - Angular</h1> </center>     
+		</div>
+	  	 
+		           
+					<div class="CajaInicio animated bounceInRight">
+							<h1>Listado de personas</h1>
+							<!-- id="listaPersonas" -->
+								<input type="search" placeholder="Buscar Persona.." ng-model="mifiltro"></input>
+								<input type="search" placeholder="Buscar Nombre.." ng-model="Qnombre"></input>
+								<input type="search" placeholder="Buscar Apellido.." ng-model="Qapellido"></input>
+								<table class='table table-hover table-responsive' id="listaPersonas">
+									<thead>
+										<tr>
+											<th>  Foto   </th>				
+											<th>  Nombre     </th>
+											<th>  Apellido   </th>
+											<th>  Sueldo   </th>
+											<th>  Sueldo Pret  </th>
+											<th>  Fecha Nac   </th>
+										</tr> 
+									</thead>
+									<tr ng-repeat="persona in ListadoPersonas | limitTo: 25 | orderBy: ['apellido', '-Nombre'] | filter:{Sueldo: '£':'hola'}:filtrarPorMoneda | filter:{$:mifiltro, Nombre: Qnombre, apellido: Qapellido} as resultado">
+
+										<td><img  class='fotoGrilla' ng-src="{{persona.foto}}" /></td>
+							
+										<td>{{persona.Nombre}}</td>
+										<td>{{persona.apellido | uppercase}}</td>					
+										<td>{{persona.Sueldo}}</td>					
+										<td>{{persona.Sueldo_pretendido | currency: 'ars$'}}</td>					
+										<td>{{persona.Fecha_nacimiento | date: 'shortTime'}}</td>					
+									</tr>
+
+
+									<tr ng-if="resultado.length == 0">
+
+										<td></td>							
+										<td>No existen personas con esos datos..</td>
+										<td></td>
+										<td></td>
+										<td></td>										
+										<td></td>
+															
+									</tr>
+
+
+
+								</table>
+							</div>
+							
+						</div>
+		</div>
